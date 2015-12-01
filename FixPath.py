@@ -12,6 +12,10 @@ def isMac():
 		return False
 
 
+def log(message):
+	print("FixMacPath: " + message)
+
+
 if isMac():
 	fixPathSettings = None
 	originalEnv = {}
@@ -37,11 +41,14 @@ if isMac():
 		currSysPath = getSysPath()
 		# Basic sanity check to make sure our new path is not empty
 		if len(currSysPath) < 1:
+			log("Something went wrong, generated PATH would have been empty. Aborting.")
 			return False
 
+		log("Setting PATH to " + currSysPath)
 		environ['PATH'] = currSysPath
 
 		for pathItem in fixPathSettings.get("additional_path_items", []):
+			log("Adding additonal item " + pathItem + " to PATH")
 			environ['PATH'] = pathItem + ':' + environ['PATH']
 
 		return True
@@ -86,4 +93,4 @@ if isMac():
 
 
 else:	# not isMac()
-	print("FixMacPath will not be loaded because current OS is not Mac OS X ('Darwin'). Found '" + platform.system() + "'")
+	log("FixMacPath will not be loaded because current OS is not Mac OS X ('Darwin'). Found '" + platform.system() + "'")
