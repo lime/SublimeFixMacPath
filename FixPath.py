@@ -21,7 +21,15 @@ if isMac():
 	originalEnv = {}
 
 	def getSysPath():
-		command = "TERM=ansi CLICOLOR=\"\" SUBLIME=1 /usr/bin/login -fqpl " + environ['USER'] + " " + environ['SHELL'] + " -l -c 'env TERM=ansi CLICOLOR=\"\" SUBLIME=1 printf \"%s:\" $PATH'"
+		login_command = [
+			'TERM=ansi', 'CLICOLOR=""', 'SUBLIME=1', '/usr/bin/login', '-fqpl', environ['USER']
+		]
+
+		shell_command = [
+			environ['SHELL'], '-l', '-c', '\'env TERM=ansi CLICOLOR="" SUBLIME=1 printf "%s:" "$PATH"\''
+		]
+
+		command = ' '.join(filter(None, login_command + shell_command))
 
 		# Execute command with original environ. Otherwise, our changes to the PATH propogate down to
 		# the shell we spawn, which re-adds the system path & returns it, leading to duplicate values.
