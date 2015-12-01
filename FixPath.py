@@ -21,12 +21,14 @@ if isMac():
 	originalEnv = {}
 
 	def getSysPath():
+		interactive = fixPathSettings.get('fix_path_interactive_shell', False)
+
 		login_command = [
 			'TERM=ansi', 'CLICOLOR=""', 'SUBLIME=1', '/usr/bin/login', '-fqpl', environ['USER']
 		]
 
 		shell_command = [
-			environ['SHELL'], '-l', '-c', '\'env TERM=ansi CLICOLOR="" SUBLIME=1 printf "%s:" "$PATH"\''
+			environ['SHELL'], '-l', ('-i' if interactive else None), '-c', '\'env TERM=ansi CLICOLOR="" SUBLIME=1 printf "%s:" "$PATH"\''
 		]
 
 		command = ' '.join(filter(None, login_command + shell_command))
